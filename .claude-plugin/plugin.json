@@ -1,0 +1,12 @@
+{
+  "name": "jacob-plugin",
+  "version": "1.0.0",
+  "description": "Git 워크플로우 스킬 — commit, pr, cleanup",
+  "author": {
+    "name": "jacob",
+    "email": "jacob@litbig.com"
+  },
+  "license": "MIT",
+  "keywords": ["git", "commit", "pull-request", "cleanup", "workflow"],
+  "skills": "./skills/"
+}
