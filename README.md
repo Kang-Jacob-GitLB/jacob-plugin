@@ -6,9 +6,9 @@
 
 | 스킬 | 설명 |
 |------|------|
-| [commit](skills/commit/) | Git 커밋 스킬 — 보안 검토, 브랜치 생성, 스테이징, 커밋 메시지 작성 |
-| [pr](skills/pr/) | PR 생성 스킬 — push, 제목/본문 생성, assignee, label 자동 설정, Actions 체크 추적 |
-| [cleanup](skills/cleanup/) | 리모트 동기화 스킬 — 기본 브랜치 이동, pull, prune, 로컬 브랜치 정리 |
+| [commit](plugins/jacob-plugin/skills/commit/) | Git 커밋 스킬 — 보안 검토, 브랜치 생성, 스테이징, 커밋 메시지 작성 |
+| [pr](plugins/jacob-plugin/skills/pr/) | PR 생성 스킬 — push, 제목/본문 생성, assignee, label 자동 설정, Actions 체크 추적 |
+| [cleanup](plugins/jacob-plugin/skills/cleanup/) | 리모트 동기화 스킬 — 기본 브랜치 이동, pull, prune, 로컬 브랜치 정리 |
 
 ## 설치 방법
 
@@ -65,15 +65,18 @@ claude plugin update jacob-plugin@jacob-plugin
 ```
 jacob-plugin/
 ├── .claude-plugin/
-│   ├── marketplace.json      ← 마켓플레이스 메타데이터
-│   └── plugin.json           ← 플러그인 메타데이터
-└── skills/
-    ├── commit/
-    │   └── SKILL.md
-    ├── pr/
-    │   └── SKILL.md
-    └── cleanup/
-        └── SKILL.md
+│   └── marketplace.json          ← 마켓플레이스 메타데이터
+└── plugins/
+    └── jacob-plugin/
+        ├── .claude-plugin/
+        │   └── plugin.json       ← 플러그인 메타데이터
+        └── skills/
+            ├── commit/
+            │   └── SKILL.md
+            ├── pr/
+            │   └── SKILL.md
+            └── cleanup/
+                └── SKILL.md
 ```
 
 ## 새 스킬 추가 방법
