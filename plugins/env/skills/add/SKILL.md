@@ -6,7 +6,7 @@ allowed-tools: Bash, Read, Edit
 
 ## 현재 상태
 
-- env.json (gist): !`gh gist view 7360c28bfd37c47cd7d19d4106224e45 --filename env.json 2>/dev/null || echo "not found"`
+- mccm.json (gist): !`GIST_ID=$(gh api gists --jq '.[] | select(.files["mccm.json"] != null) | .id' 2>/dev/null | head -1); [ -n "$GIST_ID" ] && gh gist view "$GIST_ID" --filename mccm.json 2>/dev/null || echo "not found — gist에 mccm.json 파일이 없습니다"`
 
 ## 작업 지침
 
@@ -25,15 +25,18 @@ allowed-tools: Bash, Read, Edit
 - 모호한 경우 사용자에게 확인한다
 - 경로에 머신 의존값이 있으면 `${HOME}`, `${USER}` 변수로 치환하여 저장
 
-### 2. gist에서 env.json 가져오기
+### 2. gist에서 mccm.json 가져오기
 
 ```bash
-gh gist view 7360c28bfd37c47cd7d19d4106224e45 --filename env.json > /tmp/mccm-env.json
+GIST_ID=$(gh api gists --jq '.[] | select(.files["mccm.json"] != null) | .id' | head -1)
+gh gist view "$GIST_ID" --filename mccm.json > /tmp/mccm.json
 ```
 
-### 3. env.json 수정
+gist를 찾을 수 없으면 사용자에게 안내한다: `gh gist create --desc "mccm env" --public` 으로 mccm.json gist를 먼저 생성하라고.
 
-`/tmp/mccm-env.json`을 수정한다.
+### 3. mccm.json 수정
+
+`/tmp/mccm.json`을 수정한다.
 
 - 이미 존재하는 항목이면 추가하지 않고 사용자에게 알린다
 - 플러그인 추가 시, 해당 마켓플레이스가 `marketplaces`에 없으면 함께 추가한다
@@ -41,7 +44,7 @@ gh gist view 7360c28bfd37c47cd7d19d4106224e45 --filename env.json > /tmp/mccm-en
 ### 4. gist 업데이트
 
 ```bash
-gh gist edit 7360c28bfd37c47cd7d19d4106224e45 --filename env.json --add /tmp/mccm-env.json
+gh gist edit "$GIST_ID" --filename mccm.json --add /tmp/mccm.json
 ```
 
 ### 5. 즉시 적용
@@ -55,7 +58,7 @@ gh gist edit 7360c28bfd37c47cd7d19d4106224e45 --filename env.json --add /tmp/mcc
 ### 6. 정리
 
 ```bash
-rm -f /tmp/mccm-env.json
+rm -f /tmp/mccm.json
 ```
 
 ### 7. 완료 보고

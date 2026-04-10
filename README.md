@@ -1,6 +1,6 @@
 # mccm
 
-개인용 Claude Code 플러그인 마켓플레이스.
+**m**y-**c**laude-**c**ode-**m**arketplace — Claude Code 플러그인 마켓플레이스.
 
 ## 플러그인
 
@@ -16,17 +16,19 @@
 
 ### env — 환경 동기화
 
-여러 PC에서 동일한 Claude Code 환경을 유지. `env.json`에 플러그인, MCP 서버, hooks, settings를 선언하고 동기화한다.
+여러 PC에서 동일한 Claude Code 환경을 유지. GitHub Gist의 `mccm.json`에 플러그인, MCP 서버, hooks, settings를 선언하고 동기화한다. 각 사용자는 자기 GitHub 계정의 gist에 `mccm.json` 파일을 만들어 사용한다.
 
 | 스킬 | 설명 |
 |------|------|
-| [sync](plugins/env/skills/sync/) | env.json 기반 동기화 — 충돌 시 사용자에게 취소/대치/추가 선택 |
-| [add](plugins/env/skills/add/) | 환경에 항목 추가 — env.json 수정, git push, 즉시 적용 |
-| [export](plugins/env/skills/export/) | 현재 PC의 settings.json에서 env.json 자동 생성 |
+| [sync](plugins/env/skills/sync/) | mccm.json 기반 동기화 — 충돌 시 사용자에게 취소/대치/추가 선택 |
+| [add](plugins/env/skills/add/) | 환경에 항목 추가 — mccm.json gist 수정, 즉시 적용 |
+| [export](plugins/env/skills/export/) | 현재 PC의 settings.json에서 mccm.json 자동 생성 |
 
-**env.json 관리 범위:**
+**사전 요구사항:** [GitHub CLI (`gh`)](https://cli.github.com/) 설치 및 인증 (`gh auth login`)
 
-| 항목 | env.json 키 | settings.json 매핑 |
+**mccm.json 관리 범위:**
+
+| 항목 | mccm.json 키 | settings.json 매핑 |
 |------|------------|-------------------|
 | 마켓플레이스 | `marketplaces` | `extraKnownMarketplaces` |
 | 플러그인 | `plugins` | `enabledPlugins` |
@@ -44,7 +46,7 @@ claude plugin marketplace add Kang-Jacob-GitLB/mccm
 claude plugin install env@mccm
 ```
 
-설치 후 `/sync` 실행하면 env.json 기반으로 전체 환경(플러그인, MCP, hooks, settings)이 구성된다.
+설치 후 `/sync` 실행하면 gist의 mccm.json 기반으로 전체 환경(플러그인, MCP, hooks, settings)이 구성된다.
 
 이후 환경 변경은 `/add`로 추가하면 git에 자동 반영되어 다른 PC에서 `/sync`로 동기화된다.
 
@@ -101,7 +103,7 @@ mccm/
     └── env/
         ├── .claude-plugin/
         │   └── plugin.json
-        └── skills/              ← env.json은 gist로 관리
+        └── skills/              ← mccm.json은 gist로 관리
             ├── sync/
             │   └── SKILL.md
             ├── add/

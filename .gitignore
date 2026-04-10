@@ -1,8 +1,8 @@
 # OMC local state
 .omc/
 
-# env.json is managed via gist
-plugins/env/env.json
+# mccm.json is managed via gist
+plugins/env/mccm.json
 
 # Environment
 .env
