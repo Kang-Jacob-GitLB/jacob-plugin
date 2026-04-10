@@ -7,13 +7,18 @@
   },
   "metadata": {
     "description": "개인용 Claude Code 플러그인 마켓플레이스",
-    "version": "1.2.0"
+    "version": "2.0.0"
   },
   "plugins": [
     {
-      "name": "devpack",
-      "source": "./plugins/devpack",
+      "name": "dev",
+      "source": "./plugins/dev",
       "description": "개인 개발 스킬팩 — Git 워크플로우, 문서 변환"
+    },
+    {
+      "name": "env",
+      "source": "./plugins/env",
+      "description": "Claude Code 환경 동기화 — 플러그인, MCP, hooks, settings를 여러 PC에서 동일 유지"
     }
   ]
 }

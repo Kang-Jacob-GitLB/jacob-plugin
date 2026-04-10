@@ -1,38 +1,59 @@
 # jacob-plugin
 
-개인용 Claude Code 플러그인.
+개인용 Claude Code 플러그인 마켓플레이스.
 
-## 스킬 목록
+## 플러그인
+
+### dev — 개발 스킬팩
 
 | 스킬 | 설명 |
 |------|------|
-| [commit](plugins/devpack/skills/commit/) | Git 커밋 스킬 — 보안 검토, 브랜치 생성, 스테이징, 커밋 메시지 작성 |
-| [pr](plugins/devpack/skills/pr/) | PR 생성 스킬 — push, 제목/본문 생성, assignee, label 자동 설정, Actions 체크 추적 |
-| [cleanup](plugins/devpack/skills/cleanup/) | 리모트 동기화 스킬 — 기본 브랜치 이동, pull, prune, 로컬 브랜치 정리 |
-| [md-to-pdf](plugins/devpack/skills/md-to-pdf/) | Markdown → PDF 변환 — GitHub 웹 스타일 렌더링 |
-| [md-to-gdoc](plugins/devpack/skills/md-to-gdoc/) | Markdown → Google Docs 변환 — GitHub 스타일 서식, gws CLI 사용 |
+| [commit](plugins/dev/skills/commit/) | Git 커밋 스킬 — 보안 검토, 브랜치 생성, 스테이징, 커밋 메시지 작성 |
+| [pr](plugins/dev/skills/pr/) | PR 생성 스킬 — push, 제목/본문 생성, assignee, label 자동 설정, Actions 체크 추적 |
+| [cleanup](plugins/dev/skills/cleanup/) | 리모트 동기화 스킬 — 기본 브랜치 이동, pull, prune, 로컬 브랜치 정리 |
+| [md-to-pdf](plugins/dev/skills/md-to-pdf/) | Markdown → PDF 변환 — GitHub 웹 스타일 렌더링 |
+| [md-to-gdoc](plugins/dev/skills/md-to-gdoc/) | Markdown → Google Docs 변환 — GitHub 스타일 서식, gws CLI 사용 |
+
+### env — 환경 동기화
+
+여러 PC에서 동일한 Claude Code 환경을 유지. `env.json`에 플러그인, MCP 서버, hooks, settings를 선언하고 동기화한다.
+
+| 스킬 | 설명 |
+|------|------|
+| [sync](plugins/env/skills/sync/) | env.json 기반 동기화 — 충돌 시 사용자에게 취소/대치/추가 선택 |
+| [add](plugins/env/skills/add/) | 환경에 항목 추가 — env.json 수정, git push, 즉시 적용 |
+| [export](plugins/env/skills/export/) | 현재 PC의 settings.json에서 env.json 자동 생성 |
+
+**env.json 관리 범위:**
+
+| 항목 | env.json 키 | settings.json 매핑 |
+|------|------------|-------------------|
+| 마켓플레이스 | `marketplaces` | `extraKnownMarketplaces` |
+| 플러그인 | `plugins` | `enabledPlugins` |
+| CLI 도구 | `clis` | — (check/install 명령으로 관리) |
+| MCP 서버 | `mcpServers` | `mcpServers` |
+| hooks | `hooks` | `hooks` |
+| 설정 | `settings` | 최상위 키 (language, env 등) |
+
+경로에 머신 의존값이 포함되면 변수 치환을 사용한다: `${HOME}`, `${USER}`
 
 ## 설치 방법
 
-### 1. 마켓플레이스 등록 (1회)
+### 빠른 설치 (새 PC에서 1회)
+
+```bash
+git clone https://github.com/Kang-Jacob-GitLB/jacob-plugin.git
+bash jacob-plugin/bootstrap.sh
+```
+
+`bootstrap.sh`가 마켓플레이스 등록 → env 플러그인 설치 → env.json 기반 전체 환경 동기화를 한 번에 처리한다.
+
+### 수동 설치
 
 ```bash
 claude plugin marketplace add Kang-Jacob-GitLB/jacob-plugin
-```
-
-### 2. 플러그인 설치
-
-```bash
-claude plugin install devpack@jacob-plugin
-```
-
-### 3. 플러그인 업데이트
-
-세션 시작 시 자동으로 마켓플레이스가 업데이트된다. 수동으로 업데이트하려면:
-
-```bash
-claude plugin marketplace update jacob-plugin
-claude plugin update devpack@jacob-plugin
+claude plugin install env@jacob-plugin
+claude plugin install dev@jacob-plugin
 ```
 
 ## 프로젝트별 커스터마이즈
@@ -69,26 +90,41 @@ claude plugin update devpack@jacob-plugin
 ```
 jacob-plugin/
 ├── .claude-plugin/
-│   └── marketplace.json          ← 마켓플레이스 메타데이터
+│   └── marketplace.json
+├── bootstrap.sh                  ← 새 PC 초기 설정
 └── plugins/
-    └── jacob-plugin/
+    ├── dev/
+    │   ├── .claude-plugin/
+    │   │   └── plugin.json
+    │   └── skills/
+    │       ├── commit/
+    │       │   └── SKILL.md
+    │       ├── pr/
+    │       │   └── SKILL.md
+    │       ├── cleanup/
+    │       │   └── SKILL.md
+    │       ├── md-to-pdf/
+    │       │   └── SKILL.md
+    │       └── md-to-gdoc/
+    │           └── SKILL.md
+    └── env/
         ├── .claude-plugin/
-        │   └── plugin.json       ← 플러그인 메타데이터
+        │   └── plugin.json
+        ├── env.json              ← 환경 선언 (기준)
+        ├── scripts/
+        │   ├── sync-env.js       ← 동기화 엔진 (Node.js)
+        │   └── sync-env.sh       ← bootstrap 래퍼
         └── skills/
-            ├── commit/
+            ├── sync/
             │   └── SKILL.md
-            ├── pr/
+            ├── add/
             │   └── SKILL.md
-            ├── cleanup/
-            │   └── SKILL.md
-            ├── md-to-pdf/
-            │   └── SKILL.md
-            └── md-to-gdoc/
+            └── export/
                 └── SKILL.md
 ```
 
 ## 새 스킬 추가 방법
 
-1. `skills/{skill-name}/SKILL.md` 작성
+1. `plugins/{플러그인}/skills/{skill-name}/SKILL.md` 작성
 2. PR 생성 → 리뷰 → 머지
 3. 사용자는 `claude plugin marketplace update jacob-plugin` 후 업데이트

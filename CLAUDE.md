@@ -4,8 +4,8 @@
 
 스킬 추가/수정/삭제 시 아래 항목을 반드시 수행한다:
 
-1. `plugins/devpack/skills/{skill-name}/SKILL.md` 작성/수정/삭제
-2. `plugins/devpack/.claude-plugin/plugin.json` — description, keywords 반영
+1. `plugins/{플러그인}/skills/{skill-name}/SKILL.md` 작성/수정/삭제
+2. `plugins/{플러그인}/.claude-plugin/plugin.json` — description, keywords 반영
 3. `.claude-plugin/marketplace.json` — description 반영
 4. `README.md` — 스킬 목록 테이블, 플러그인 구조 트리 반영
 5. 버전업 — `plugin.json` + `marketplace.json` 동시 변경
@@ -20,4 +20,3 @@
 - 타입: feat, fix, refactor, docs, chore
 - 여러 커밋이 쌓여 있으면 squash하여 하나로 커밋
 - 커밋 전 위 체크리스트 완료 여부 확인
-- .omc/ 디렉토리는 스테이징하지 않는다
