@@ -76,19 +76,30 @@ settings.json에서 아래 섹션을 추출한다:
 
 생성된 mccm.json 내용을 사용자에게 보여주고 확인을 받는다.
 
-`mcpServers`에 `env` 키(API 토큰 등)가 포함된 서버가 있으면 경고한다:
-> ⚠️ mcpServers에 환경변수(API 토큰 등)가 포함되어 있습니다. Gist에 그대로 업로드됩니다.
-> Gist가 secret인지 확인하세요. public Gist라면 토큰이 노출될 수 있습니다.
+`mcpServers`에 `env` 키(API 토큰 등)가 포함된 서버가 있으면 **해당 서버의 `env` 값을 제거한 상태**로 mccm.json을 구성한다.
+
+> ⚠️ 아래 MCP 서버에 환경변수(API 토큰 등)가 포함되어 있어 제외했습니다:
+> - (서버명 목록)
+>
+> **(1) 제외 유지** (기본) / **(2) 포함** 중 선택하세요.
+> ⚠️ (2)를 선택하면 Gist에 토큰이 그대로 저장됩니다. secret Gist인지 반드시 확인하세요.
+
+사용자가 명시적으로 **(2) 포함**을 선택한 경우에만 env를 포함한다.
 
 ### 6. gist 업데이트
 
-```bash
-GIST_ID=$(gh api gists --jq '.[] | select(.files["mccm.json"] != null) | .id' | head -1)
+`gh api gists`로 `mccm.json`을 포함하는 gist를 검색한다.
 
+- **0개**: 새 gist를 생성한다 (`gh gist create --desc "mccm env"`).
+- **1개**: 해당 gist를 업데이트한다.
+- **2개 이상**: ID와 description을 목록으로 보여주고 사용자에게 선택을 받는다. `head -1`으로 자동 선택하지 않는다.
+
+```bash
 cat > /tmp/mccm.json <<'EOF'
 {생성된 mccm.json 내용}
 EOF
 
+# GIST_ID는 위 선택 과정에서 결정된 값
 if [ -n "$GIST_ID" ]; then
   gh gist edit "$GIST_ID" --filename mccm.json --add /tmp/mccm.json
 else
