@@ -4,19 +4,11 @@
 
 ## 플러그인
 
-### dev — 개발 스킬팩
-
-| 스킬 | 설명 |
-|------|------|
-| [commit](plugins/dev/skills/commit/) | Git 커밋 스킬 — 보안 검토, 브랜치 생성, 스테이징, 커밋 메시지 작성 |
-| [pr](plugins/dev/skills/pr/) | PR 생성 스킬 — push, 제목/본문 생성, assignee, label 자동 설정, Actions 체크 추적 |
-| [cleanup](plugins/dev/skills/cleanup/) | 리모트 동기화 스킬 — 기본 브랜치 이동, pull, prune, 로컬 브랜치 정리 |
-| [md-to-pdf](plugins/dev/skills/md-to-pdf/) | Markdown → PDF 변환 — GitHub 웹 스타일 렌더링 |
-| [md-to-gdoc](plugins/dev/skills/md-to-gdoc/) | Markdown → Google Docs 변환 — GitHub 스타일 서식, gws CLI 사용 |
-
 ### env — 환경 동기화
 
-여러 PC에서 동일한 Claude Code 환경을 유지. GitHub Gist의 `mccm.json`에 플러그인, MCP 서버, hooks, settings를 선언하고 동기화한다. 각 사용자는 자기 GitHub 계정의 gist에 `mccm.json` 파일을 만들어 사용한다.
+새 PC나 다른 장비에서 Claude Code를 쓸 때마다 플러그인, MCP 서버, hooks, settings를 하나씩 다시 설정해야 하고, 팀원에게 구두로 전달하거나 문서를 따로 만들어야 하며, 설정이 각 PC에 흩어져 있어서 어디가 최신인지 알 수 없고, settings.json을 직접 복사하면 경로(홈 디렉토리, 사용자명)가 달라서 그대로 안 된다.
+
+env 플러그인은 `mccm.json` 파일 하나에 환경 전체를 선언적으로 정의하고, GitHub Gist에 저장해서 어디서든 동기화할 수 있게 한다. 경로의 머신 의존값은 `${HOME}`, `${USER}` 변수로 자동 치환되어 OS/사용자가 달라도 동작한다.
 
 | 스킬 | 설명 |
 |------|------|
@@ -24,6 +16,8 @@
 | [upload](plugins/env/skills/upload/) | 로컬 → Gist 업로드 — Gist 전용 항목 삭제 선택, 사용자 확인 후 반영 |
 
 **사전 요구사항:** [GitHub CLI (`gh`)](https://cli.github.com/) 설치 및 인증 (`gh auth login`)
+
+> **⚠️ 보안 주의:** MCP 서버의 API 토큰 등 민감 정보가 mccm.json에 포함됩니다. Gist는 기본 **secret**으로 생성되지만, 기존에 `--public`으로 만든 Gist가 있다면 secret Gist로 재생성하세요. secret Gist도 URL을 아는 사람은 접근할 수 있으므로 URL 공유에 주의하세요.
 
 **mccm.json 관리 범위:**
 
@@ -36,7 +30,15 @@
 | hooks | `hooks` | `hooks` |
 | 설정 | `settings` | 최상위 키 (language, env 등) |
 
-경로에 머신 의존값이 포함되면 변수 치환을 사용한다: `${HOME}`, `${USER}`
+### dev — 개발 스킬팩
+
+| 스킬 | 설명 |
+|------|------|
+| [commit](plugins/dev/skills/commit/) | Git 커밋 스킬 — 보안 검토, 브랜치 생성, 스테이징, 커밋 메시지 작성 |
+| [pr](plugins/dev/skills/pr/) | PR 생성 스킬 — push, 제목/본문 생성, assignee, label 자동 설정, Actions 체크 추적 |
+| [cleanup](plugins/dev/skills/cleanup/) | 리모트 동기화 스킬 — 기본 브랜치 이동, pull, prune, 로컬 브랜치 정리 |
+| [md-to-pdf](plugins/dev/skills/md-to-pdf/) | Markdown → PDF 변환 — GitHub 웹 스타일 렌더링 |
+| [md-to-gdoc](plugins/dev/skills/md-to-gdoc/) | Markdown → Google Docs 변환 — GitHub 스타일 서식, gws CLI 사용 |
 
 ## 설치 방법
 
@@ -85,27 +87,27 @@ mccm/
 ├── .claude-plugin/
 │   └── marketplace.json
 └── plugins/
-    ├── dev/
+    ├── env/
     │   ├── .claude-plugin/
     │   │   └── plugin.json
-    │   └── skills/
-    │       ├── commit/
+    │   └── skills/              ← mccm.json은 gist로 관리
+    │       ├── download/
     │       │   └── SKILL.md
-    │       ├── pr/
-    │       │   └── SKILL.md
-    │       ├── cleanup/
-    │       │   └── SKILL.md
-    │       ├── md-to-pdf/
-    │       │   └── SKILL.md
-    │       └── md-to-gdoc/
+    │       └── upload/
     │           └── SKILL.md
-    └── env/
+    └── dev/
         ├── .claude-plugin/
         │   └── plugin.json
-        └── skills/              ← mccm.json은 gist로 관리
-            ├── download/
+        └── skills/
+            ├── commit/
             │   └── SKILL.md
-            └── upload/
+            ├── pr/
+            │   └── SKILL.md
+            ├── cleanup/
+            │   └── SKILL.md
+            ├── md-to-pdf/
+            │   └── SKILL.md
+            └── md-to-gdoc/
                 └── SKILL.md
 ```
 

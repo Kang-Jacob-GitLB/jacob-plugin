@@ -76,6 +76,10 @@ settings.json에서 아래 섹션을 추출한다:
 
 생성된 mccm.json 내용을 사용자에게 보여주고 확인을 받는다.
 
+`mcpServers`에 `env` 키(API 토큰 등)가 포함된 서버가 있으면 경고한다:
+> ⚠️ mcpServers에 환경변수(API 토큰 등)가 포함되어 있습니다. Gist에 그대로 업로드됩니다.
+> Gist가 secret인지 확인하세요. public Gist라면 토큰이 노출될 수 있습니다.
+
 ### 6. gist 업데이트
 
 ```bash
@@ -88,7 +92,7 @@ EOF
 if [ -n "$GIST_ID" ]; then
   gh gist edit "$GIST_ID" --filename mccm.json --add /tmp/mccm.json
 else
-  gh gist create /tmp/mccm.json --desc "mccm env" --public
+  gh gist create /tmp/mccm.json --desc "mccm env"
 fi
 rm -f /tmp/mccm.json
 ```

@@ -21,7 +21,7 @@ Gist의 mccm.json을 기준으로 로컬 환경을 구성한다.
 
 ### 0. gist 확인
 
-gist를 찾을 수 없으면 사용자에게 안내한다: `gh gist create --desc "mccm env" --public` 으로 mccm.json gist를 먼저 생성하라고.
+gist를 찾을 수 없으면 사용자에게 안내한다: `gh gist create --desc "mccm env"` 으로 mccm.json gist를 먼저 생성하라고.
 
 ### 1. 마켓플레이스
 
